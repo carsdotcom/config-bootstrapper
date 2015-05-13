@@ -1,0 +1,16 @@
+{
+  "name": "config-bootstrap",
+  "version": "0.0.0",
+  "authors": [
+    "Mac Heller-Ogden <mheller-ogden@cars.com>"
+  ],
+  "description": "A simple configuration bootstrap",
+  "main": "dist/config-bootstrap.js",
+  "keywords": [
+    "config",
+    "bootstrap",
+    "feature flags"
+  ],
+  "license": "Apache 2.0",
+  "homepage": ""
+}
