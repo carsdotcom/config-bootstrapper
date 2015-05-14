@@ -1,11 +1,11 @@
 {
-  "name": "config-bootstrap",
+  "name": "config-bootstrapper",
   "version": "0.0.0",
   "authors": [
     "Mac Heller-Ogden <mheller-ogden@cars.com>"
   ],
-  "description": "A simple configuration bootstrap",
-  "main": "dist/config-bootstrap.js",
+  "description": "A simple configuration bootstrapper",
+  "main": "dist/config-bootstrapper.js",
   "keywords": [
     "config",
     "bootstrap",

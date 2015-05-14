@@ -4,12 +4,11 @@
  *
  */
 var gulp,
-    clean;
+    del;
 
 gulp = require('gulp');
-clean = require('gulp-rimraf');
+del = require('del');
 
-module.exports = function () {
-    return gulp.src('dist/', { read: false })
-        .pipe(clean());
+module.exports = function (done) {
+    del('dist/', done);
 };

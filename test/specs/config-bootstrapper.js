@@ -1,6 +1,6 @@
-/* global ConfigBootstrap */
-describe("Loading config", function() {
-    var config, configBootstrap;
+/* global ConfigBootstrapper */
+describe("Loading config bootstrapper", function() {
+    var options, configBootstrapper;
 
     beforeEach(function () {
         jasmine.Ajax.install();
@@ -12,7 +12,7 @@ describe("Loading config", function() {
         jasmine.clock().uninstall();
     });
 
-    config = {
+    options = {
         baseUrl: "http://static-config.cars.example.com",
         refreshRate: 300,
         storageKey: 'cars.configData'
@@ -30,7 +30,7 @@ describe("Loading config", function() {
 
     describe("when instantiated", function() {
         beforeEach(function () {
-            configBootstrap = new ConfigBootstrap(config);
+            configBootstrapper = new ConfigBootstrapper(options);
         });
 
         describe('when the config GET request is successful', function () {
@@ -39,7 +39,7 @@ describe("Loading config", function() {
                 var callback, request;
 
                 callback = jasmine.createSpy("callback");
-                configBootstrap.ready(callback);
+                configBootstrapper.ready(callback);
 
                 expect(callback).not.toHaveBeenCalled();
 
@@ -51,7 +51,7 @@ describe("Loading config", function() {
                 request.respondWith({ status: 200, responseText: JSON.stringify({ myFlag: true }) });
 
                 expect(callback).toHaveBeenCalled();
-                expect(JSON.parse(window.localStorage.getItem(config.storageKey))).toEqual({ myFlag: true });
+                expect(JSON.parse(window.localStorage.getItem(options.storageKey))).toEqual({ myFlag: true });
             });
         });
 
@@ -61,11 +61,11 @@ describe("Loading config", function() {
                 var callback, request;
 
                 callback = jasmine.createSpy("callback");
-                configBootstrap.ready(callback);
+                configBootstrapper.ready(callback);
 
                 expect(callback).not.toHaveBeenCalled();
 
-                window.localStorage.setItem(config.storageKey, JSON.stringify({ myFlag: true }));
+                window.localStorage.setItem(options.storageKey, JSON.stringify({ myFlag: true }));
                 request = jasmine.Ajax.requests.mostRecent();
 
                 expect(request.url).toBe('http://static-config.cars.example.com');
@@ -74,7 +74,7 @@ describe("Loading config", function() {
                 request.respondWith({ status: 500, responseText:""});
 
                 expect(callback).toHaveBeenCalled();
-                expect(JSON.parse(window.localStorage.getItem(config.storageKey))).toEqual({ myFlag: true });
+                expect(JSON.parse(window.localStorage.getItem(options.storageKey))).toEqual({ myFlag: true });
             });
         });
 
@@ -82,14 +82,14 @@ describe("Loading config", function() {
             it("every 5 minutes config data will be refreshed from the server", function () {
                 var request;
 
-                configBootstrap.ready(function () {});
+                configBootstrapper.ready(function () {});
 
                 request = jasmine.Ajax.requests.mostRecent();
                 request.respondWith({ status: 200, responseText: JSON.stringify({ myFlag: true }) });
 
-                expect(JSON.parse(window.localStorage.getItem(config.storageKey))).toEqual({ myFlag: true });
+                expect(JSON.parse(window.localStorage.getItem(options.storageKey))).toEqual({ myFlag: true });
 
-                jasmine.clock().tick(config.refreshRate - 1);
+                jasmine.clock().tick(options.refreshRate - 1);
 
                 expect(function () {
                     request = jasmine.Ajax.requests.mostRecent();
@@ -101,14 +101,14 @@ describe("Loading config", function() {
                 request = jasmine.Ajax.requests.mostRecent();
                 request.respondWith({ status: 200, responseText: JSON.stringify({ myNewFlag: true }) });
 
-                expect(JSON.parse(window.localStorage.getItem(config.storageKey))).toEqual({ myNewFlag: true });
+                expect(JSON.parse(window.localStorage.getItem(options.storageKey))).toEqual({ myNewFlag: true });
 
-                jasmine.clock().tick(config.refreshRate);
+                jasmine.clock().tick(options.refreshRate);
 
                 request = jasmine.Ajax.requests.mostRecent();
                 request.respondWith({ status: 200, responseText: JSON.stringify({ myNewestFlag: true }) });
 
-                expect(JSON.parse(window.localStorage.getItem(config.storageKey))).toEqual({ myNewestFlag: true });
+                expect(JSON.parse(window.localStorage.getItem(options.storageKey))).toEqual({ myNewestFlag: true });
             });
         });
 

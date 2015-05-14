@@ -1,8 +1,8 @@
 {
-  "name": "config-bootstrap",
+  "name": "config-bootstrapper",
   "private": true,
   "version": "0.0.0",
-  "description": "A simple configuration bootstrap",
+  "description": "A simple configuration bootstrapper",
   "author": "Mac Heller-Ogden <mheller-ogden@cars.com>",
   "license": "Apache 2.0",
   "homepage": "",
@@ -28,11 +28,11 @@
     "gulp-util": "^3.0.1",
     "event-stream": "^3.1.7",
     "gulp-sourcemaps": "^1.1.5",
-    "gulp-rimraf": "^0.1.0",
     "run-sequence": "^0.3.6",
     "change-case": "^2.1.5",
     "minimist": "^1.1.0",
     "gulp-concat-util": "^0.5.1",
-    "karma-jasmine-ajax": "^0.1.12"
+    "karma-jasmine-ajax": "^0.1.12",
+    "del": "^1.1.1"
   }
 }

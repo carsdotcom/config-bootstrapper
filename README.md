@@ -1,3 +1,3 @@
-# Config Bootstrap
+# Config Bootstrapper
 
-A simple configuration bootstrap
+A simple configuration bootstrapper

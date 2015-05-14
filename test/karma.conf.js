@@ -2,8 +2,8 @@ module.exports = function (config) {
     config.set({
         basePath: '..',
         files: [
-            'src/config-bootstrap.js',
-            'test/specs/config-bootstrap.js'
+            'src/config-bootstrapper.js',
+            'test/specs/config-bootstrapper.js'
         ],
         frameworks: [ 'jasmine-ajax', 'jasmine' ],
         exclude: [],
@@ -31,7 +31,7 @@ module.exports = function (config) {
         singleRun: true,
 
         preprocessors: {
-          'src/featureflags.js': [ 'coverage' ]
+          'src/config-bootstrapper.js': [ 'coverage' ]
         },
 
         // optionally, configure the reporter

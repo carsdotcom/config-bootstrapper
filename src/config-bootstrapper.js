@@ -1,28 +1,28 @@
 /*!
- * Config Bootstrap v0.0.0 <https://github.com/carsdotcom>
+ * Config Bootstrapper v0.0.0 <https://github.com/carsdotcom>
  * @license Apache 2.0
  * @copyright 2015 Cars.com <http://www.cars.com/>
  * @author Mac Heller-Ogden <mheller-ogden@cars.com>
- * @summary A simple configuration bootstrap
+ * @summary A simple configuration bootstrapper
  */
 (function () {
 
-    function ConfigBootstrap(options) {
+    function ConfigBootstrapper(options) {
         this.options = options;
     }
 
-    ConfigBootstrap.prototype.ready = function (callback) {
-        var configBootstrap = this;
+    ConfigBootstrapper.prototype.ready = function (callback) {
+        var configBootstrapper = this;
         this._getJson(this.options.baseUrl, callback);
 
         // setup refresh interval
         setTimeout(function refreshHandler() {
-            configBootstrap._getJson(configBootstrap.options.baseUrl, function () {});
-            setTimeout(refreshHandler, configBootstrap.options.refreshRate);
+            configBootstrapper._getJson(configBootstrapper.options.baseUrl, function () {});
+            setTimeout(refreshHandler, configBootstrapper.options.refreshRate);
         }, this.options.refreshRate);
     };
 
-    ConfigBootstrap.prototype._getJson = function(url, callback) {
+    ConfigBootstrapper.prototype._getJson = function(url, callback) {
         var bootstrap, xhr;
         bootstrap = this;
         xhr = new XMLHttpRequest();
@@ -38,6 +38,6 @@
         xhr.send();
     };
 
-    window.ConfigBootstrap = ConfigBootstrap;
+    window.ConfigBootstrapper = ConfigBootstrapper;
 
 }());

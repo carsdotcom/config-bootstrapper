@@ -14,9 +14,9 @@ rename = require('gulp-rename');
 uglify = require('gulp-uglify');
 
 module.exports = function () {
-    return gulp.src('src/config-bootstrap.js')
+    return gulp.src('src/config-bootstrapper.js')
         .pipe(gulp.dest('dist/'))
-        .pipe(rename('config-bootstrap.min.js'))
+        .pipe(rename('config-bootstrapper.min.js'))
         .pipe(uglify({
             preserveComments: 'some'
         }))
