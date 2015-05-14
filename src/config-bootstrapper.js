@@ -15,7 +15,6 @@
         var configBootstrapper = this;
         this._getJson(this.options.baseUrl, callback);
 
-        // setup refresh interval
         setTimeout(function refreshHandler() {
             configBootstrapper._getJson(configBootstrapper.options.baseUrl, function () {});
             setTimeout(refreshHandler, configBootstrapper.options.refreshRate);
@@ -23,19 +22,32 @@
     };
 
     ConfigBootstrapper.prototype._getJson = function(url, callback) {
-        var bootstrap, xhr;
+        var bootstrap,
+            ts,
+            now,
+            xhr;
+
         bootstrap = this;
-        xhr = new XMLHttpRequest();
-        xhr.open('GET', url, true);
-        xhr.onreadystatechange = function() {
-            if (xhr.readyState == 4) { // `DONE`
-                if (xhr.status === 200) {
-                    window.localStorage.setItem(bootstrap.options.storageKey, xhr.responseText);
+
+        ts = +window.localStorage.getItem(bootstrap.options.timestampStorageKey);
+        now = Date.now();
+
+        if (!ts || (now >= (ts + bootstrap.options.refreshRate * 1000))) {
+            xhr = new XMLHttpRequest();
+            xhr.open('GET', url, true);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4) { // `DONE`
+                    if (xhr.status === 200) {
+                        window.localStorage.setItem(bootstrap.options.dataStorageKey, xhr.responseText);
+                        window.localStorage.setItem(bootstrap.options.timestampStorageKey, now);
+                    }
+                    callback();
                 }
-                callback();
-            }
-        };
-        xhr.send();
+            };
+            xhr.send();
+        } else {
+            callback();
+        }
     };
 
     window.ConfigBootstrapper = ConfigBootstrapper;

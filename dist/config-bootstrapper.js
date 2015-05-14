@@ -23,19 +23,32 @@
     };
 
     ConfigBootstrapper.prototype._getJson = function(url, callback) {
-        var bootstrap, xhr;
+        var bootstrap,
+            ts,
+            now,
+            xhr;
+
         bootstrap = this;
-        xhr = new XMLHttpRequest();
-        xhr.open('GET', url, true);
-        xhr.onreadystatechange = function() {
-            if (xhr.readyState == 4) { // `DONE`
-                if (xhr.status === 200) {
-                    window.localStorage.setItem(bootstrap.options.storageKey, xhr.responseText);
+
+        ts = window.localStorage.getItem(bootstrap.options.timestampStorageKey);
+        now = Date.now();
+
+        if (ts == null || (now > (ts + bootstrap.options.refreshRate * 1000))) {
+            xhr = new XMLHttpRequest();
+            xhr.open('GET', url, true);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4) { // `DONE`
+                    if (xhr.status === 200) {
+                        window.localStorage.setItem(bootstrap.options.dataStorageKey, xhr.responseText);
+                        window.localStorage.setItem(bootstrap.options.timestampStorageKey, now);
+                    }
+                    callback();
+                    return;
                 }
-                callback();
-            }
-        };
-        xhr.send();
+            };
+            xhr.send();
+        }
+        callback();
     };
 
     window.ConfigBootstrapper = ConfigBootstrapper;
