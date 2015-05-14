@@ -5,7 +5,11 @@
  * @author Mac Heller-Ogden <mheller-ogden@cars.com>
  * @summary A simple configuration bootstrapper
  */
-(function () {
+!function (name, definition) {
+    if (typeof module != 'undefined' && module.exports) module.exports = definition();
+    else if (typeof define == 'function' && typeof define.amd == 'object') define(definition);
+    else (function () { return this || (0, eval)('this'); }())[name] = definition();
+}('ConfigBootstrapper', function () {
 
     function ConfigBootstrapper(options) {
         this.options = options;
@@ -15,7 +19,6 @@
         var configBootstrapper = this;
         this._getJson(this.options.baseUrl, callback);
 
-        // setup refresh interval
         setTimeout(function refreshHandler() {
             configBootstrapper._getJson(configBootstrapper.options.baseUrl, function () {});
             setTimeout(refreshHandler, configBootstrapper.options.refreshRate);
@@ -30,10 +33,10 @@
 
         bootstrap = this;
 
-        ts = window.localStorage.getItem(bootstrap.options.timestampStorageKey);
+        ts = +window.localStorage.getItem(bootstrap.options.timestampStorageKey);
         now = Date.now();
 
-        if (ts == null || (now > (ts + bootstrap.options.refreshRate * 1000))) {
+        if (!ts || (now >= (ts + bootstrap.options.refreshRate * 1000))) {
             xhr = new XMLHttpRequest();
             xhr.open('GET', url, true);
             xhr.onreadystatechange = function () {
@@ -43,14 +46,14 @@
                         window.localStorage.setItem(bootstrap.options.timestampStorageKey, now);
                     }
                     callback();
-                    return;
                 }
             };
             xhr.send();
+        } else {
+            callback();
         }
-        callback();
     };
 
-    window.ConfigBootstrapper = ConfigBootstrapper;
+    return ConfigBootstrapper;
 
-}());
+});

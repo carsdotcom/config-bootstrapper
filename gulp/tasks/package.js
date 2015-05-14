@@ -18,7 +18,8 @@ module.exports = function () {
         .pipe(gulp.dest('dist/'))
         .pipe(rename('config-bootstrapper.min.js'))
         .pipe(uglify({
-            preserveComments: 'some'
+            preserveComments: 'some',
+            mangle: false
         }))
         .pipe(gulp.dest('dist/'))
         .on('error', util.log);

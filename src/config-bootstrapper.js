@@ -5,7 +5,11 @@
  * @author Mac Heller-Ogden <mheller-ogden@cars.com>
  * @summary A simple configuration bootstrapper
  */
-(function () {
+!function (name, definition) {
+    if (typeof module != 'undefined' && module.exports) module.exports = definition();
+    else if (typeof define == 'function' && typeof define.amd == 'object') define(definition);
+    else (function () { return this || (0, eval)('this'); }())[name] = definition();
+}('ConfigBootstrapper', function () {
 
     function ConfigBootstrapper(options) {
         this.options = options;
@@ -50,6 +54,6 @@
         }
     };
 
-    window.ConfigBootstrapper = ConfigBootstrapper;
+    return ConfigBootstrapper;
 
-}());
+});
