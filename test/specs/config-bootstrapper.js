@@ -1,4 +1,3 @@
-/* global ConfigBootstrapper */
 describe("Loading config bootstrapper", function() {
     var options,
         configBootstrapper,
@@ -33,7 +32,6 @@ describe("Loading config bootstrapper", function() {
 
     describe("when instantiated", function() {
         beforeEach(function () {
-            configBootstrapper = new ConfigBootstrapper(options);
             timeValues = {
                 now: 1431630398530,
                 fiveMinutes: 300 * 1000,
@@ -52,8 +50,11 @@ describe("Loading config bootstrapper", function() {
                     localStorage.setItem(options.dataStorageKey, JSON.stringify({ myFlag: true }));
                     localStorage.setItem(options.timestampStorageKey, timeValues.now);
 
+                    configBootstrapper = new ConfigBootstrapper(options);
+
                     callback = jasmine.createSpy('callback');
                     configBootstrapper.ready(callback);
+
                     request = jasmine.Ajax.requests.mostRecent();
 
                     expect(request).toBeUndefined();
@@ -62,69 +63,74 @@ describe("Loading config bootstrapper", function() {
             });
 
             describe("when a timestamp exists and is older than 5 minutes old", function () {
-                it("should load the config from the api", function () {
-                    var callback,
-                        request;
+                it("should load the config from the api", function (done) {
+                    var request;
 
+                    jasmine.clock().uninstall();
                     spyOn(Date, 'now').and.returnValue(timeValues.now + timeValues.almostFiveMinutes);
 
                     localStorage.setItem(options.dataStorageKey, JSON.stringify({ myFlag: true }));
                     localStorage.setItem(options.timestampStorageKey, timeValues.now - 1);
 
-                    callback = jasmine.createSpy('callback');
-                    configBootstrapper.ready(callback);
-                    request = jasmine.Ajax.requests.mostRecent();
-                    request.respondWith({ status: 200, responseText: JSON.stringify({ myFlag: false }) });
+                    configBootstrapper = new ConfigBootstrapper(options);
 
-                    expect(callback).toHaveBeenCalled();
-                    expect(JSON.parse(localStorage.getItem(options.dataStorageKey))).toEqual({ myFlag: false });
+                    configBootstrapper.ready(function () {
+                        request = jasmine.Ajax.requests.mostRecent();
+                        request.respondWith({ status: 200, responseText: JSON.stringify({ myFlag: false }) });
+                        expect(JSON.parse(localStorage.getItem(options.dataStorageKey))).toEqual({ myFlag: false });
+                        done();
+                    });
+
                 });
             });
 
             describe("when a timestamp does not exist or if the timestamp is older than 5 minutes", function () {
 
                 describe("when the GET request is successful", function () {
-                    it("loads the config from the api", function () {
-                        var callback,
-                            request;
+                    it("loads the config from the api", function (done) {
+                        var request;
 
-                        callback = jasmine.createSpy('callback');
-                        configBootstrapper.ready(callback);
+                        jasmine.clock().uninstall();
 
-                        expect(callback).not.toHaveBeenCalled();
+                        configBootstrapper = new ConfigBootstrapper(options);
 
-                        request = jasmine.Ajax.requests.mostRecent();
+                        configBootstrapper.ready(function () {
+                            request = jasmine.Ajax.requests.mostRecent();
 
-                        expect(request.url).toBe('http://static-config.cars.example.com');
-                        expect(request.method).toBe('GET');
+                            expect(request.url).toBe('http://static-config.cars.example.com');
+                            expect(request.method).toBe('GET');
 
-                        request.respondWith({ status: 200, responseText: JSON.stringify({ myFlag: true }) });
+                            request.respondWith({ status: 200, responseText: JSON.stringify({ myFlag: true }) });
 
-                        expect(callback).toHaveBeenCalled();
-                        expect(JSON.parse(localStorage.getItem(options.dataStorageKey))).toEqual({ myFlag: true });
+                            expect(JSON.parse(localStorage.getItem(options.dataStorageKey))).toEqual({ myFlag: true });
+                            done();
+                        });
+
                     });
 
                 });
 
                 describe("when the GET request fails", function () {
-                    it("the existing configuration data in local storage does not get overwritten", function () {
-                        var callback, request;
+                    it("the existing configuration data in local storage does not get overwritten", function (done) {
+                        var request;
 
-                        callback = jasmine.createSpy("callback");
-                        configBootstrapper.ready(callback);
+                        jasmine.clock().uninstall();
 
-                        expect(callback).not.toHaveBeenCalled();
+                        configBootstrapper = new ConfigBootstrapper(options);
 
-                        localStorage.setItem(options.dataStorageKey, JSON.stringify({ myFlag: true }));
-                        request = jasmine.Ajax.requests.mostRecent();
+                        configBootstrapper.ready(function () {
+                            localStorage.setItem(options.dataStorageKey, JSON.stringify({ myFlag: true }));
+                            request = jasmine.Ajax.requests.mostRecent();
 
-                        expect(request.url).toBe('http://static-config.cars.example.com');
-                        expect(request.method).toBe('GET');
+                            expect(request.url).toBe('http://static-config.cars.example.com');
+                            expect(request.method).toBe('GET');
 
-                        request.respondWith({ status: 500, responseText:""});
+                            request.respondWith({ status: 500, responseText:""});
 
-                        expect(callback).toHaveBeenCalled();
-                        expect(JSON.parse(localStorage.getItem(options.dataStorageKey))).toEqual({ myFlag: true });
+                            expect(JSON.parse(localStorage.getItem(options.dataStorageKey))).toEqual({ myFlag: true });
+                            done();
+                        });
+
                     });
                 });
             });
@@ -132,6 +138,7 @@ describe("Loading config bootstrapper", function() {
             describe("refreshing the config", function () {
                 it("every 5 minutes config data will be refreshed from the server", function () {
                     var request;
+
 
                     spyOn(Date, 'now').and.callFake((function () {
                         var now = timeValues.now;
@@ -141,6 +148,7 @@ describe("Loading config bootstrapper", function() {
                         };
                     }()));
 
+                    configBootstrapper = new ConfigBootstrapper(options);
                     configBootstrapper.ready(function () {});
 
                     request = jasmine.Ajax.requests.mostRecent();

@@ -1,13 +1,13 @@
 {
   "name": "config-bootstrapper",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "A simple configuration bootstrapper",
   "author": "Mac Heller-Ogden <mheller-ogden@cars.com>",
   "license": "Apache 2.0",
-  "homepage": "",
+  "homepage": "https://github.com/carsdotcom/config-bootstrapper",
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "https://github.com/carsdotcom/config-bootstrapper.git"
   },
   "preinstall": "npm install -g gulp",
   "devDependencies": {

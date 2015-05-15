@@ -1,6 +1,6 @@
 {
   "name": "config-bootstrapper",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "authors": [
     "Mac Heller-Ogden <mheller-ogden@cars.com>"
   ],
@@ -12,5 +12,5 @@
     "feature flags"
   ],
   "license": "Apache 2.0",
-  "homepage": ""
+  "homepage": "https://github.com/carsdotcom/config-bootstrapper"
 }

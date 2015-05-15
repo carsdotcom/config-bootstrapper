@@ -6,9 +6,7 @@
         "jasmine": true
     },
     "globals": {
-        "$LAB": true,
-        "Ignition": true,
-        "angular": true
+        "ConfigBootstrapper": true
     },
     "rules": {
         "one-var": 2,

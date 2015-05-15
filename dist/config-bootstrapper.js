@@ -1,5 +1,5 @@
 /*!
- * Config Bootstrapper v0.0.2 <https://github.com/carsdotcom>
+ * Config Bootstrapper v0.0.3 <https://github.com/carsdotcom/config-bootstrapper>
  * @license Apache 2.0
  * @copyright 2015 Cars.com <http://www.cars.com/>
  * @author Mac Heller-Ogden <mheller-ogden@cars.com>
@@ -24,24 +24,47 @@
     }
 
     function ConfigBootstrapper(options) {
+        var cbs = this;
+
         options = (typeof options == "object") ? options : {};
         options.refreshRate = options.refreshRate || 300;
         options.dataStorageKey = options.dataStorageKey || 'configBootstrapper.data';
         options.timestampStorageKey = options.timestampStorageKey || 'configBootstrapper.timestamp';
-        this.options = options;
+        options.timeout = options.timeout || 4000;
+
+        cbs.options = options;
+
+        cbs.isReady = false;
+        cbs.timeoutCounter = 0;
+        cbs.readyPollRate = 100;
+
+        cbs._loadData();
+
+        setTimeout(function refreshHandler() {
+            cbs._loadData();
+            setTimeout(refreshHandler, options.refreshRate);
+        }, options.refreshRate);
     }
+
+    ConfigBootstrapper.prototype.markAsReady = function () {
+        this.isReady = true;
+    };
 
     ConfigBootstrapper.prototype.ready = function (callback) {
         var cbs = this;
-        this._getJson(this.options.url, callback);
-
-        setTimeout(function refreshHandler() {
-            cbs._getJson(cbs.options.url, function () {});
-            setTimeout(refreshHandler, cbs.options.refreshRate);
-        }, this.options.refreshRate);
+        if (cbs.isReady) {
+            callback();
+        } else if (cbs.timeoutCounter <= cbs.timeout) {
+            cbs.timeoutCounter = cbs.timeoutCounter + cbs.readyPollRate;
+            setTimeout(function () {
+                cbs.ready(callback);
+            }, cbs.readyPollRate);
+        } else {
+            callback();
+        }
     };
 
-    ConfigBootstrapper.prototype._getJson = function(url, callback) {
+    ConfigBootstrapper.prototype._loadData = function () {
         var cbs,
             ts,
             now,
@@ -54,19 +77,19 @@
 
         if (!ts || (now >= (ts + cbs.options.refreshRate * 1000))) {
             xhr = new XMLHttpRequest();
-            xhr.open('GET', url, true);
+            xhr.open('GET', cbs.options.url, true);
             xhr.onreadystatechange = function () {
                 if (xhr.readyState == 4) { // `DONE`
-                    if (xhr.status === 200) {
+                    if (xhr.status == 200) {
                         localStorage.setItem(cbs.options.dataStorageKey, xhr.responseText);
                         localStorage.setItem(cbs.options.timestampStorageKey, now);
                     }
-                    callback();
+                    cbs.markAsReady();
                 }
             };
             xhr.send();
         } else {
-            callback();
+            cbs.markAsReady();
         }
     };
 
