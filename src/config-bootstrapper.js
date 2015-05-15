@@ -1,5 +1,5 @@
 /*!
- * Config Bootstrapper v0.0.4 <https://github.com/carsdotcom/config-bootstrapper>
+ * Config Bootstrapper v0.0.5 <https://github.com/carsdotcom/config-bootstrapper>
  * @license Apache 2.0
  * @copyright 2015 Cars.com <http://www.cars.com/>
  * @author Mac Heller-Ogden <mheller-ogden@cars.com>
@@ -38,8 +38,6 @@
         cbs.timeoutCounter = 0;
         cbs.readyPollRate = 100;
 
-        cbs.data = {};
-
         cbs._loadData();
 
         setTimeout(function refreshHandler() {
@@ -55,15 +53,25 @@
     ConfigBootstrapper.prototype.ready = function (callback) {
         var cbs = this;
         if (cbs.isReady) {
-            callback(cbs.data);
+            callback(cbs.getData());
         } else if (cbs.timeoutCounter <= cbs.timeout) {
             cbs.timeoutCounter = cbs.timeoutCounter + cbs.readyPollRate;
             setTimeout(function () {
                 cbs.ready(callback);
             }, cbs.readyPollRate);
         } else {
-            callback(cbs.data);
+            callback(cbs.getData());
         }
+    };
+
+    ConfigBootstrapper.prototype.getData = function () {
+        var data;
+        try {
+            data = JSON.parse(localStorage.getItem(this.options.dataStorageKey));
+        } catch (e) {
+            data = {};
+        }
+        return data;
     };
 
     ConfigBootstrapper.prototype._loadData = function () {
@@ -85,12 +93,6 @@
                     if (xhr.status == 200) {
                         localStorage.setItem(cbs.options.dataStorageKey, xhr.responseText);
                         localStorage.setItem(cbs.options.timestampStorageKey, now);
-                        try {
-                            cbs.data = JSON.parse(xhr.responseText);
-                        } catch (e) {
-                            /* eslint no-console: 0*/
-                            console.log(e.message);
-                        }
                     }
                     cbs.markAsReady();
                 }
