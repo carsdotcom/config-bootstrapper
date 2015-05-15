@@ -1,7 +1,6 @@
 {
   "name": "config-bootstrapper",
-  "private": true,
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "A simple configuration bootstrapper",
   "author": "Mac Heller-Ogden <mheller-ogden@cars.com>",
   "license": "Apache 2.0",
@@ -34,5 +33,9 @@
     "gulp-concat-util": "^0.5.1",
     "karma-jasmine-ajax": "^0.1.12",
     "del": "^1.1.1"
+  },
+  "dependencies": {
+    "node-localstorage": "^0.5.0",
+    "xmlhttprequest": "^1.7.0"
   }
 }
