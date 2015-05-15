@@ -1,5 +1,5 @@
 /*!
- * Config Bootstrapper v0.0.1 <https://github.com/carsdotcom>
+ * Config Bootstrapper v0.0.2 <https://github.com/carsdotcom>
  * @license Apache 2.0
  * @copyright 2015 Cars.com <http://www.cars.com/>
  * @author Mac Heller-Ogden <mheller-ogden@cars.com>
@@ -41,7 +41,7 @@
         }, this.options.refreshRate);
     };
 
-    ConfigBootstrapper.prototype._getJson = function(callback) {
+    ConfigBootstrapper.prototype._getJson = function(url, callback) {
         var cbs,
             ts,
             now,
@@ -54,11 +54,10 @@
 
         if (!ts || (now >= (ts + cbs.options.refreshRate * 1000))) {
             xhr = new XMLHttpRequest();
-            xhr.open('GET', cbs.options.url, true);
+            xhr.open('GET', url, true);
             xhr.onreadystatechange = function () {
                 if (xhr.readyState == 4) { // `DONE`
                     if (xhr.status === 200) {
-                        console.log('boom');
                         localStorage.setItem(cbs.options.dataStorageKey, xhr.responseText);
                         localStorage.setItem(cbs.options.timestampStorageKey, now);
                     }
