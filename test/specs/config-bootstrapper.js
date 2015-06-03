@@ -139,12 +139,10 @@ describe("Loading config bootstrapper", function() {
                 it("every 5 minutes config data will be refreshed from the server", function () {
                     var request;
 
-
                     spyOn(Date, 'now').and.callFake((function () {
                         var now = timeValues.now;
                         return function () {
-                            now = now + options.refreshRate * 1000;
-                            return now;
+                            return now = now + options.refreshRate * 1000;
                         };
                     }()));
 
@@ -156,7 +154,7 @@ describe("Loading config bootstrapper", function() {
 
                     expect(JSON.parse(localStorage.getItem(options.dataStorageKey))).toEqual({ myFlag: true });
 
-                    jasmine.clock().tick(options.refreshRate - 1);
+                    jasmine.clock().tick(options.refreshRate * 1000 - 1);
 
                     expect(function () {
                         request = jasmine.Ajax.requests.mostRecent();
@@ -170,7 +168,7 @@ describe("Loading config bootstrapper", function() {
 
                     expect(JSON.parse(localStorage.getItem(options.dataStorageKey))).toEqual({ myNewFlag: true });
 
-                    jasmine.clock().tick(options.refreshRate);
+                    jasmine.clock().tick(options.refreshRate * 1000);
 
                     request = jasmine.Ajax.requests.mostRecent();
                     request.respondWith({ status: 200, responseText: JSON.stringify({ myNewestFlag: true }) });

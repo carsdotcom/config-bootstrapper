@@ -1,6 +1,6 @@
 {
   "name": "config-bootstrapper",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "A simple configuration bootstrapper",
   "author": "Mac Heller-Ogden <mheller-ogden@cars.com>",
   "license": "Apache 2.0",

@@ -1,5 +1,5 @@
 /*!
- * Config Bootstrapper v0.0.7 <https://github.com/carsdotcom/config-bootstrapper>
+ * Config Bootstrapper v0.0.8 <https://github.com/carsdotcom/config-bootstrapper>
  * @license Apache 2.0
  * @copyright 2015 Cars.com <http://www.cars.com/>
  * @author Mac Heller-Ogden <mheller-ogden@cars.com>
@@ -28,6 +28,7 @@
 
         options = (typeof options == "object") ? options : {};
         options.refreshRate = options.refreshRate || 300;
+        options.refreshRateMs = options.refreshRate * 1000;
         options.dataStorageKey = options.dataStorageKey || 'configBootstrapper.data';
         options.timestampStorageKey = options.timestampStorageKey || 'configBootstrapper.timestamp';
         options.timeout = options.timeout || 4000;
@@ -42,8 +43,8 @@
 
         setTimeout(function refreshHandler() {
             cbs._loadData();
-            setTimeout(refreshHandler, options.refreshRate);
-        }, options.refreshRate);
+            setTimeout(refreshHandler, options.refreshRateMs);
+        }, options.refreshRateMs);
     }
 
     ConfigBootstrapper.prototype.markAsReady = function () {
@@ -84,7 +85,7 @@
         ts = parseInt(localStorage.getItem(cbs.options.timestampStorageKey), 10);
         now = Date.now();
 
-        if (!ts || (now >= (ts + cbs.options.refreshRate * 1000))) {
+        if (!ts || (now >= (ts + cbs.options.refreshRateMs))) {
             xhr = new XMLHttpRequest();
             xhr.open('GET', cbs.options.url, true);
             xhr.onreadystatechange = function () {
