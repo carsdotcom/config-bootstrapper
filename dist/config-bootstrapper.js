@@ -1,5 +1,5 @@
 /*!
- * Config Bootstrapper v0.0.8 <https://github.com/carsdotcom/config-bootstrapper>
+ * Config Bootstrapper v0.0.10 <https://github.com/carsdotcom/config-bootstrapper>
  * @license Apache 2.0
  * @copyright 2015 Cars.com <http://www.cars.com/>
  * @author Mac Heller-Ogden <mheller-ogden@cars.com>
@@ -66,11 +66,10 @@
     };
 
     ConfigBootstrapper.prototype.getData = function () {
-        var data;
+        var data = {};
         try {
-            data = JSON.parse(localStorage.getItem(this.options.dataStorageKey));
+            data = JSON.parse(localStorage.getItem(this.options.dataStorageKey)) || {};
         } catch (e) {}
-        data = (typeof data === 'object') ? data : {};
         return data;
     };
 
