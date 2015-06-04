@@ -1,5 +1,5 @@
 /*!
- * Config Bootstrapper v0.0.10 <https://github.com/carsdotcom/config-bootstrapper>
+ * Config Bootstrapper v0.0.11 <https://github.com/carsdotcom/config-bootstrapper>
  * @license Apache 2.0
  * @copyright 2015 Cars.com <http://www.cars.com/>
  * @author Mac Heller-Ogden <mheller-ogden@cars.com>
@@ -55,7 +55,7 @@
         var cbs = this;
         if (cbs.isReady) {
             callback(cbs.getData());
-        } else if (cbs.timeoutCounter <= cbs.timeout) {
+        } else if (cbs.timeoutCounter <= cbs.options.timeout) {
             cbs.timeoutCounter = cbs.timeoutCounter + cbs.readyPollRate;
             setTimeout(function () {
                 cbs.ready(callback);
