@@ -6,15 +6,34 @@
 var gulp,
     util,
     rename,
-    uglify;
+    uglify,
+    browserify,
+    babelify,
+    source,
+    buffer;
 
 gulp = require('gulp');
 util = require('gulp-util');
 rename = require('gulp-rename');
 uglify = require('gulp-uglify');
+browserify = require('browserify');
+babelify = require('babelify');
+source = require('vinyl-source-stream');
+buffer = require('vinyl-buffer');
 
 module.exports = function () {
-    return gulp.src('src/config-bootstrapper.js')
+    var b = browserify({
+        entries: 'src/config-bootstrapper.js',
+        debug: true,
+
+        standalone: 'ConfigBootstrapper',
+
+        transform: [ babelify ]
+    });
+
+    return b.bundle()
+        .pipe(source('config-bootstrapper.js'))
+        .pipe(buffer())
         .pipe(gulp.dest('dist/'))
         .pipe(rename('config-bootstrapper.min.js'))
         .pipe(uglify({

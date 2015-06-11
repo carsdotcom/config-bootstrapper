@@ -2,7 +2,7 @@ module.exports = function (config) {
     config.set({
         basePath: '..',
         files: [
-            'src/config-bootstrapper.js',
+            'dist/config-bootstrapper.js',
             'test/specs/config-bootstrapper.js'
         ],
         frameworks: [ 'jasmine-ajax', 'jasmine' ],
