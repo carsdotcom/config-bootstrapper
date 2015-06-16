@@ -31,7 +31,7 @@ module.exports = function (config) {
         singleRun: true,
 
         preprocessors: {
-          'src/config-bootstrapper.js': [ 'coverage' ]
+          'dist/config-bootstrapper.js': [ 'coverage' ]
         },
 
         // optionally, configure the reporter

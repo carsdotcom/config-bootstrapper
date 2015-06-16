@@ -1,5 +1,5 @@
 /*!
- * Config Bootstrapper v0.1.0 <https://github.com/carsdotcom/config-bootstrapper>
+ * Config Bootstrapper v0.1.1 <https://github.com/carsdotcom/config-bootstrapper>
  * @license Apache 2.0
  * @copyright 2015 Cars.com <http://www.cars.com/>
  * @author Mac Heller-Ogden <mheller-ogden@cars.com>
