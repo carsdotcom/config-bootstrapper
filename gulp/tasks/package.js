@@ -28,7 +28,7 @@ module.exports = function () {
 
         standalone: 'ConfigBootstrapper',
 
-        transform: [ babelify ]
+        transform: [babelify.configure({ presets: ['babel-preset-es2015'] })]
     });
 
     return b.bundle()
