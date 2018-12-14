@@ -9,9 +9,6 @@
     "globals": {
         "ConfigBootstrapper": true
     },
-    "ecmaFeatures": {
-        "modules": true
-    },
     "rules": {
         "one-var": 2,
         "vars-on-top": 2,
